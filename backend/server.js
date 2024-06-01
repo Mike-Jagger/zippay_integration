@@ -1,6 +1,6 @@
 const express = require('express');
 const bodyParser = require('body-parser');
-
+const cors = require('cors');
 const paymentPayout = require('./routes/exchangeOrder');
 const paymentPayin = require('./routes/rechargeOrder');
 const merchantQuery = require('./routes/merchantQuery');
@@ -11,6 +11,7 @@ const app = express();
 const PORT = 5000;
 
 app.use(bodyParser.json());
+app.use(cors()); // For tests only
 
 // Payment Request Endpoint
 app.use('/payment/payin', paymentPayin);
