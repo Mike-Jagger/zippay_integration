@@ -1,12 +1,21 @@
-const express = require('express');
-const bodyParser = require('body-parser');
-const axios = require('axios');
 const NodeRSA = require('node-rsa');
-const app = express();
-const PORT = process.env.PORT || 3000;
+const fs = require('fs');
 
-app.use(bodyParser.json());
+const privateKey = fs.readFileSync('path/to/private/key.pem', 'utf8');
+const publicKey = fs.readFileSync('path/to/public/key.pem', 'utf8');
 
-app.listen(PORT, () => {
-    console.log(`Server is running on port ${PORT}`);
-});
+const privateKeyObject = new NodeRSA(privateKey);
+const publicKeyObject = new NodeRSA(publicKey);
+
+const encryptData = (data) => {
+    return privateKeyObject.encryptPrivate(Buffer.from(JSON.stringify(data)), 'base64');
+};
+
+const decryptData = (data) => {
+    return publicKeyObject.decryptPublic(Buffer.from(data, 'base64'), 'utf8');
+};
+
+module.exports = {
+    encryptData,
+    decryptData
+};
