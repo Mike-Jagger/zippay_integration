@@ -2,7 +2,8 @@ const express = require('express');
 const bodyParser = require('body-parser');
 const axios = require('axios');
 const { encryptData, decryptData } = require('./util');
-const paymentPayout = require('./routes/exchangeOrder')
+const paymentPayout = require('./routes/exchangeOrder');
+const paymentPayin = require('./routes/rechargeOrder');
 
 
 const app = express();
@@ -11,59 +12,7 @@ const PORT = process.env.PORT || 3000;
 app.use(bodyParser.json());
 
 // Payment Request Endpoint
-app.post('/payment/payin', async (req, res) => {
-    const { merchantId, merchantOrderId, amount, phone, email, name, tunnelId, currency, nonce, timestamp } = req.body;
-    
-    const signData = `${merchantId}${merchantOrderId}${amount}${nonce}${timestamp}`;
-    const sign = encryptData(signData);
-
-    const payload = {
-        merchantId,
-        merchantOrderId,
-        amount,
-        phone,
-        email,
-        name,
-        tunnelId,
-        currency,
-        nonce,
-        timestamp,
-        sign
-    };
-
-    try {
-        const response = await axios.post('http://52.74.165.63:8040/api/payment/payin', payload, {
-            headers: {
-                'Content-Type': 'application/json'
-            }
-        });
-
-        res.json(response.data);
-    } catch (error) {
-        res.status(500).json({ error: error.message });
-    }
-});
-
-// Callback Endpoint for Payment
-app.post('/callback', (req, res) => {
-    const { code, msg, merchantOrderId, platformOrderId, amount, realAmount, sign } = req.body;
-
-    // Construct the data string for verification
-    const signData = `${code}${msg}${merchantOrderId}${platformOrderId}${amount}${realAmount}`;
-
-    // Decrypt the received signature
-    const isValidSign = decryptData(sign) === signData;
-
-    if (isValidSign) {
-        // Process the callback data here (idempotent processing)
-        // Example: Save to database, update order status, etc.
-        console.log('Callback data processed successfully');
-
-        res.send('success');  // Acknowledge receipt
-    } else {
-        res.status(400).send('invalid signature');
-    }
-});
+app.use('/payment/payin', paymentPayin);
 
 // Collection Inquiry Endpoint
 app.post('/payment/rechargeOrderquery', async (req, res) => {
