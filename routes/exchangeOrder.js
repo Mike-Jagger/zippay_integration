@@ -1,7 +1,7 @@
 const express = require("express");
 const router = express.Router();
 const axios = require('axios');
-const { encryptData, decryptData } = require('../utils');
+const { encryptData, decryptData, constructSignData } = require('../utils');
 
 // Payout Endpoint
 router.post('/', async (req, res) => {
@@ -47,10 +47,24 @@ router.post('/', async (req, res) => {
 router.post('/callback', (req, res) => {
     const { code, msg, merchantOrderId, platformOrderId, sign, utr } = req.body;
 
-    let signData = `${code}${msg}${merchantOrderId}${platformOrderId}`;
-    if (utr) {
-        signData += utr;
-    }
+    // Construct the data object
+    const data = {
+        code,
+        msg,
+        merchantOrderId,
+        platformOrderId,
+        utr
+    };
+
+    // Remove empty fields
+    Object.keys(data).forEach(key => {
+        if (data[key] === undefined || data[key] === null || data[key] === '') {
+            delete data[key];
+        }
+    });
+
+    // Construct the signData string in alphabetical order
+    const signData = constructSignData(data);
 
     const isValidSign = decryptData(sign) === signData;
 
