@@ -16,39 +16,67 @@ app.post('/payment/payout', (req, res) => {
     const isValidSign = cleanUpDecryptedData(decryptData(payLoad.sign)) == signData;
 
     if (isValidSign) {
-        console.log("Yay!")
+        let isPaymentSuccessful = false;
+        let utr = '';
+
+        // process payment and bank returns utr if possible
+        
+        // Scenario on successful transaction
+        { isPaymentSuccessful = true; }
+
+        // Update database (e.g resources -> exchange-order-list.txt
+        
+        if (isPaymentSuccessful) {
+            // Simulate callback to the backend
+            let data = {
+                code: 1,
+                msg: 'SUCCESS',
+                merchantOrderId: payLoad.merchantOrderId,
+                platformOrderId: payLoad.platformOrderId,
+                utr: utr
+            }
+            // Remove empty fields
+            Object.keys(data).forEach(key => {
+                if (data[key] === undefined || data[key] === null || data[key] === '') {
+                    delete data[key];
+                }
+            });
+
+            const sign = encryptData(constructSignData(data));
+
+            data["sign"] = sign;
+
+            // Check if callback was successfull
+            axios.post('http://localhost:5000/payment/payout/callback', data)
+                .then((response) => {
+                    if (response == 'success') {
+                        console.log('Payout callback sent successfully');
+                    }
+                }).catch((err) => {
+                    console.error('Error sending callback:', err.message);
+            });
+            
+            // Send response with confirmed payment
+            res.status(200).json({
+                code: 200,
+                msg: 'SUCCESS',
+                success: true,
+                data: {
+                    merchantId: payLoad.merchantId,
+                    merchanOrderId: payLoad.merchanOrderId,
+                    platformOrderId: payLoad.platformOrderId,
+                    timestamp: `${Date.now()}`
+                }
+            });
+            console.log("Payout was successful");
+        
+        } else {
+            console.log("Payout was unsuccessful");
+        }
 
     } else {
         res.status(400).send('invalid signature');
     }
-
-    
-
-    res.json({
-        merchantId: 1,
-        msg: 'SUCCESS',
-        merchanOrderId: payLoad.merchanOrderId,
-        platformOrderId: `P${Date.now()}`
-    });
-
-    // Simulating a successful payout
-    
-    // Simulate processing the request
-    // setTimeout(() => {
-    //     // Simulate callback to the backend
-    //     axios.post('http://localhost:5000/payment/payout/callback', {
-    //         code: 1,
-    //         msg: 'SUCCESS',
-    //         merchantId: payLoad.merchantOrderId,
-    //         platformOrderId: `P${Date.now()}`,
-    //         sign: 'mocked-signature',
-    //         utr: 'mocked-utr'
-    //     }).then(() => {
-    //         console.log('Callback sent successfully');
-    //     }).catch((err) => {
-    //         console.error('Error sending callback:', err.message);
-    //     });
-    // }, 3000); // Simulate delay
 });
 
 app.listen(PORT, () => {
