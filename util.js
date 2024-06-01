@@ -4,8 +4,8 @@ const fs = require('fs');
 const privateKey = fs.readFileSync('./KEYS/PRIVATE.pem', 'utf8');
 const publicKey = fs.readFileSync('./KEYS/PUBLIC.pem', 'utf8');
 
-const privateKeyObject = new NodeRSA(privateKey);
-const publicKeyObject = new NodeRSA(publicKey);
+const privateKeyObject = new NodeRSA(privateKey, 'pkcs8-private-pem');
+const publicKeyObject = new NodeRSA(publicKey, 'pkcs8-public-pem');
 
 const encryptData = (data) => {
     return privateKeyObject.encryptPrivate(Buffer.from(JSON.stringify(data)), 'base64');
