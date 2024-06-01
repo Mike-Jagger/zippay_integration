@@ -4,7 +4,7 @@ const axios = require('axios');
 const { encryptData, decryptData } = require('../utils');
 
 // Payin endpoint
-app.post('/payment/payin', async (req, res) => {
+router.post('/', async (req, res) => {
     const { merchantId, merchantOrderId, amount, phone, email, name, tunnelId, currency, nonce, timestamp } = req.body;
     
     const signData = `${merchantId}${merchantOrderId}${amount}${nonce}${timestamp}`;
@@ -36,3 +36,26 @@ app.post('/payment/payin', async (req, res) => {
         res.status(500).json({ error: error.message });
     }
 });
+
+// Callback Endpoint for Payment
+router.post('/callback', (req, res) => {
+    const { code, msg, merchantOrderId, platformOrderId, amount, realAmount, sign } = req.body;
+
+    // Construct the data string for verification
+    const signData = `${code}${msg}${merchantOrderId}${platformOrderId}${amount}${realAmount}`;
+
+    // Decrypt the received signature
+    const isValidSign = decryptData(sign) === signData;
+
+    if (isValidSign) {
+        // Process the callback data here (idempotent processing)
+        // Example: Save to database, update order status, etc.
+        console.log('Callback data processed successfully');
+
+        res.send('success');  // Acknowledge receipt
+    } else {
+        res.status(400).send('invalid signature');
+    }
+});
+
+module.exports = router;
