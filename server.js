@@ -2,6 +2,9 @@ const express = require('express');
 const bodyParser = require('body-parser');
 const axios = require('axios');
 const { encryptData, decryptData } = require('./util');
+const paymentPayout = require('./routes/exchangeOrder')
+
+
 const app = express();
 const PORT = process.env.PORT || 3000;
 
@@ -121,44 +124,7 @@ app.post('/payment/merchantQuery', async (req, res) => {
 });
 
 // Payment Endpoint
-app.post('/payment/payout', async (req, res) => {
-    const { merchantId, merchantOrderId, amount, phone, email, account, accountName, address, subBranch, withdrawType, bankName, remark, tunnelId, currency, nonce, timestamp } = req.body;
-    
-    const signData = `${merchantId}${merchantOrderId}${amount}${nonce}${timestamp}`;
-    const sign = encryptData(signData);
-
-    const payload = {
-        merchantId,
-        merchantOrderId,
-        amount,
-        phone,
-        email,
-        account,
-        accountName,
-        address,
-        subBranch,
-        withdrawType,
-        bankName,
-        remark,
-        tunnelId,
-        currency,
-        nonce,
-        timestamp,
-        sign
-    };
-
-    try {
-        const response = await axios.post('http://52.74.165.63:8040/api/payment/payout', payload, {
-            headers: {
-                'Content-Type': 'application/json'
-            }
-        });
-
-        res.json(response.data);
-    } catch (error) {
-        res.status(500).json({ error: error.message });
-    }
-});
+app.use('/payment/payout', paymentPayout);
 
 // Payment Inquiry Endpoint
 app.post('/payment/exchangeOrderquery', async (req, res) => {
