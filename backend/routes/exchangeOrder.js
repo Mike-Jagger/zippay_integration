@@ -7,7 +7,7 @@ const gatewayAddress = process.env.GATEWAY_ADDRESS || "52.74.165.63:8040";
 
 // Payout Endpoint
 router.post('/', async (req, res) => {
-    const { merchantId, merchantOrderId, platformOrderId, amount, phone, email, account, accountName, address, subBranch, withdrawType, bankName, remark, tunnelId, currency, nonce, timestamp } = req.body;
+    const { merchantId, merchantOrderId, amount, phone, email, account, accountName, address, subBranch, withdrawType, bankName, remark, tunnelId, currency, nonce, timestamp } = req.body;
     
     const signData = `${merchantId}${merchantOrderId}${amount}${nonce}${timestamp}`;
     const sign = encryptData(signData);
@@ -15,7 +15,6 @@ router.post('/', async (req, res) => {
     const payload = {
         merchantId,
         merchantOrderId,
-        platformOrderId,
         amount,
         phone,
         email,
@@ -41,9 +40,9 @@ router.post('/', async (req, res) => {
         });
 
         res.json(response.data);
-        console.log("Payout was successful")
+        console.log("Payout was successful");
     } catch (error) {
-        console.log("Payout was unsuccessful")
+        console.log("Payout was unsuccessful");
         res.status(500).json({ error: error.message });
     }
 });

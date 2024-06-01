@@ -32,7 +32,7 @@ app.post('/payment/payout', (req, res) => {
                 code: 1,
                 msg: 'SUCCESS',
                 merchantOrderId: payLoad.merchantOrderId,
-                platformOrderId: payLoad.platformOrderId,
+                platformOrderId: "A22308231907420000184", // Default for now
                 utr: utr
             }
             // Remove empty fields

@@ -32,9 +32,10 @@ router.post('/', async (req, res) => {
                 'Content-Type': 'application/json'
             }
         });
-
+        console.log("Payout was successful");
         res.json(response.data);
     } catch (error) {
+        console.log("Payout was unsuccessful");
         res.status(500).json({ error: error.message });
     }
 });
@@ -71,8 +72,9 @@ router.post('/callback', (req, res) => {
         // Example: Save to database, update order status, etc.
         console.log('Callback data processed successfully');
 
-        res.send('success');  // Acknowledge receipt
+        res.send('success');
     } else {
+        console.log("Callback process failed - Invalid signature");
         res.status(400).send('invalid signature');
     }
 });
