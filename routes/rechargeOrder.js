@@ -3,6 +3,8 @@ const router = express.Router();
 const axios = require('axios');
 const { encryptData, decryptData, constructSignData } = require('../utils');
 
+const gatewayAddress = process.env.GATEWAY_ADDRESS || "52.74.165.63:8040";
+
 // Payin endpoint
 router.post('/', async (req, res) => {
     const { merchantId, merchantOrderId, amount, phone, email, name, tunnelId, currency, nonce, timestamp } = req.body;
@@ -25,7 +27,7 @@ router.post('/', async (req, res) => {
     };
 
     try {
-        const response = await axios.post('http://52.74.165.63:8040/api/payment/payin', payload, {
+        const response = await axios.post(`http://${gatewayAddress}/payment/payin`, payload, {
             headers: {
                 'Content-Type': 'application/json'
             }
