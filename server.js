@@ -5,6 +5,7 @@ const { encryptData, decryptData } = require('./util');
 const paymentPayout = require('./routes/exchangeOrder');
 const paymentPayin = require('./routes/rechargeOrder');
 const merchantQuery = require('./routes/merchantQuery');
+const exchangeOrderquery = require('./routes/exchangeOrderQuery');
 
 
 const app = express();
@@ -53,35 +54,7 @@ app.use('/payment/merchantQuery', merchantQuery);
 app.use('/payment/payout', paymentPayout);
 
 // Payment Inquiry Endpoint
-app.post('/payment/exchangeOrderquery', async (req, res) => {
-    const { merchantId, merchantOrderId, nonce, timestamp, platformOrderId, utr, orderTime } = req.body;
-    
-    const signData = `${merchantId}${nonce}${timestamp}`;
-    const sign = encryptData(signData);
-
-    const payload = {
-        merchantId,
-        merchantOrderId,
-        nonce,
-        timestamp,
-        platformOrderId,
-        utr,
-        orderTime,
-        sign
-    };
-
-    try {
-        const response = await axios.post('http://52.74.165.63:8040/api/payment/exchangeOrderquery', payload, {
-            headers: {
-                'Content-Type': 'application/json'
-            }
-        });
-
-        res.json(response.data);
-    } catch (error) {
-        res.status(500).json({ error: error.message });
-    }
-});
+app.use('/payment/exchangeOrderquery', exchangeOrderquery);
 
 app.listen(PORT, () => {
     console.log(`Server is running on port ${PORT}`);
