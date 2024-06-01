@@ -1,8 +1,9 @@
 const express = require("express");
 const router = express.Router();
 const axios = require('axios');
-const { encryptData } = require('../utils'); 
+const { encryptData, decryptData } = require('../utils');
 
+// Payout Endpoint
 router.post('/', async (req, res) => {
     const { merchantId, merchantOrderId, amount, phone, email, account, accountName, address, subBranch, withdrawType, bankName, remark, tunnelId, currency, nonce, timestamp } = req.body;
     
@@ -41,3 +42,27 @@ router.post('/', async (req, res) => {
         res.status(500).json({ error: error.message });
     }
 });
+
+// Callback Endpoint for Payment
+router.post('/callback', (req, res) => {
+    const { code, msg, merchantOrderId, platformOrderId, sign, utr } = req.body;
+
+    let signData = `${code}${msg}${merchantOrderId}${platformOrderId}`;
+    if (utr) {
+        signData += utr;
+    }
+
+    const isValidSign = decryptData(sign) === signData;
+
+    if (isValidSign) {
+        // Process the callback data here (idempotent processing)
+        // Example: Save to database, update order status, etc.
+        console.log('Callback data processed successfully');
+
+        res.send('success');
+    } else {
+        res.status(400).send('invalid signature');
+    }
+});
+
+module.exports = router;
