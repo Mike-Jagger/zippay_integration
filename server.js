@@ -40,6 +40,21 @@ app.post('/payment/payin', async (req, res) => {
     }
 });
 
+app.post('/callback', (req, res) => {
+    const { code, msg, merchantOrderId, platformOrderId, amount, realAmount, sign } = req.body;
+
+    const signData = `${code}${msg}${merchantOrderId}${platformOrderId}${amount}${realAmount}`;
+    const isValidSign = decryptData(sign) === signData;
+
+    if (isValidSign) {
+        // Process the callback
+        res.send('success');
+    } else {
+        res.status(400).send('invalid signature');
+    }
+});
+
+
 
 app.listen(PORT, () => {
     console.log(`Server is running on port ${PORT}`);
