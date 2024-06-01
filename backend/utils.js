@@ -20,8 +20,20 @@ const constructSignData = (data) => {
     return sortedKeys.map(key => data[key]).join('');
 };
 
+const cleanUpDecryptedData = (data) => {
+    let decryptedSign = "";
+    for (let character of data) {
+        if (character !== " " && character !== '"') {
+            decryptedSign += character;
+        }
+    }
+
+    return decryptedSign;
+}
+
 module.exports = {
     encryptData,
     decryptData,
-    constructSignData
+    constructSignData,
+    cleanUpDecryptedData
 };

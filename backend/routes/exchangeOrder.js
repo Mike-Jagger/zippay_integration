@@ -1,7 +1,7 @@
 const express = require("express");
 const router = express.Router();
 const axios = require('axios');
-const { encryptData, decryptData, constructSignData } = require('../utils');
+const { encryptData, decryptData, constructSignData, cleanUpDecryptedData } = require('../utils');
 
 const gatewayAddress = process.env.GATEWAY_ADDRESS || "52.74.165.63:8040";
 
@@ -68,7 +68,7 @@ router.post('/callback', (req, res) => {
     // Construct the signData string in alphabetical order
     const signData = constructSignData(data);
 
-    const isValidSign = decryptData(sign) === signData;
+    const isValidSign = cleanUpDecryptedData(decryptData(sign)) === signData;
 
     if (isValidSign) {
         // Process the callback data here (idempotent processing)
