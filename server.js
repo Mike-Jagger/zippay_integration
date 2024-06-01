@@ -6,7 +6,7 @@ const paymentPayout = require('./routes/exchangeOrder');
 const paymentPayin = require('./routes/rechargeOrder');
 const merchantQuery = require('./routes/merchantQuery');
 const exchangeOrderquery = require('./routes/exchangeOrderQuery');
-
+const rechargeOrderquery = require('./routes/rechargeOrderQuery');
 
 const app = express();
 const PORT = process.env.PORT || 3000;
@@ -17,35 +17,7 @@ app.use(bodyParser.json());
 app.use('/payment/payin', paymentPayin);
 
 // Collection Inquiry Endpoint
-app.post('/payment/rechargeOrderquery', async (req, res) => {
-    const { merchantId, merchantOrderId, nonce, timestamp, platformOrderId, utr, orderTime } = req.body;
-    
-    const signData = `${merchantId}${nonce}${timestamp}`;
-    const sign = encryptData(signData);
-
-    const payload = {
-        merchantId,
-        merchantOrderId,
-        nonce,
-        timestamp,
-        platformOrderId,
-        utr,
-        orderTime,
-        sign
-    };
-
-    try {
-        const response = await axios.post('http://52.74.165.63:8040/api/payment/rechargeOrderquery', payload, {
-            headers: {
-                'Content-Type': 'application/json'
-            }
-        });
-
-        res.json(response.data);
-    } catch (error) {
-        res.status(500).json({ error: error.message });
-    }
-});
+app.use('/payment/rechargeOrderquery', rechargeOrderquery);
 
 // Balance Inquiry Endpoint
 app.use('/payment/merchantQuery', merchantQuery);

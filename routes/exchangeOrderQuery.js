@@ -3,6 +3,7 @@ const router = express.Router();
 const axios = require('axios');
 const { encryptData } = require('../utils');
 
+// Payment Inquiry Endpoint
 router.post('/', async (req, res) => {
     const { merchantId, merchantOrderId, nonce, timestamp, platformOrderId, utr, orderTime } = req.body;
     
