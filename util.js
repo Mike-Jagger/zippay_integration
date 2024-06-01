@@ -15,7 +15,13 @@ const decryptData = (data) => {
     return publicKeyObject.decryptPublic(Buffer.from(data, 'base64'), 'utf8');
 };
 
+const constructSignData = (data) => {
+    const sortedKeys = Object.keys(data).sort();
+    return sortedKeys.map(key => data[key]).join('');
+};
+
 module.exports = {
     encryptData,
-    decryptData
+    decryptData,
+    constructSignData
 };
