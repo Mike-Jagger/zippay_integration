@@ -1,7 +1,6 @@
 const express = require('express');
 const bodyParser = require('body-parser');
-const axios = require('axios');
-const { encryptData, decryptData } = require('./util');
+
 const paymentPayout = require('./routes/exchangeOrder');
 const paymentPayin = require('./routes/rechargeOrder');
 const merchantQuery = require('./routes/merchantQuery');
