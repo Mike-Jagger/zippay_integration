@@ -5,8 +5,8 @@ const { encryptData, decryptData } = require('./util');
 const paymentPayout = require('./routes/exchangeOrder');
 const paymentPayin = require('./routes/rechargeOrder');
 const merchantQuery = require('./routes/merchantQuery');
-const exchangeOrderquery = require('./routes/exchangeOrderQuery');
-const rechargeOrderquery = require('./routes/rechargeOrderQuery');
+const exchangeOrderQuery = require('./routes/exchangeOrderQuery');
+const rechargeOrderQuery = require('./routes/rechargeOrderQuery');
 
 const app = express();
 const PORT = process.env.PORT || 3000;
@@ -17,7 +17,7 @@ app.use(bodyParser.json());
 app.use('/payment/payin', paymentPayin);
 
 // Collection Inquiry Endpoint
-app.use('/payment/rechargeOrderquery', rechargeOrderquery);
+app.use('/payment/rechargeOrderquery', rechargeOrderQuery);
 
 // Balance Inquiry Endpoint
 app.use('/payment/merchantQuery', merchantQuery);
@@ -26,7 +26,7 @@ app.use('/payment/merchantQuery', merchantQuery);
 app.use('/payment/payout', paymentPayout);
 
 // Payment Inquiry Endpoint
-app.use('/payment/exchangeOrderquery', exchangeOrderquery);
+app.use('/payment/exchangeOrderquery', exchangeOrderQuery);
 
 app.listen(PORT, () => {
     console.log(`Server is running on port ${PORT}`);
