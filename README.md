@@ -104,7 +104,7 @@ To test the payout functionality with Postman:
 - __Error Handling:__ Improve error handling and logging for better debugging and maintenance.
 
 ## Licensing
-This project is licensed under the MIT License. See the [LICENSE]() file for details.
+This project is licensed under the MIT License. See the [LICENSE](https://github.com/Mike-Jagger/zippay_integration?tab=MIT-1-ov-file) file for details.
 
 ## Contributing
 Contributions are welcome! Please fork the repository and submit pull requests for any enhancements or bug fixes.
