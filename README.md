@@ -2,6 +2,8 @@
 
 This project demonstrates the integration of ZipPay's payment gateway using Node.js and React. It includes a backend server to handle payment requests, a mock server to simulate ZipPay's API, and a frontend application to facilitate user interaction.
 
+> For more info on how the project works, please refer to the [Full Project Report](https://github.com/Mike-Jagger/zippay_integration/blob/master/docs/Project%20Report.pdf)
+
 ## Table of Contents
 - [Installation](#installation)
 - [Environment Variables](#environment-variables)
@@ -35,7 +37,7 @@ This project demonstrates the integration of ZipPay's payment gateway using Node
 
 ## Environment Variables
 Source the __`.env`__ file (using `terminal` or `git bash`) in the main repository and configure the necessary environment variables. 
-> For production settings and detailed information, refer to ZipPay's documentation.
+> For production settings and detailed information, refer to [ZipPay's documentation](https://github.com/Mike-Jagger/zippay_integration/blob/master/docs/zippay%E5%AF%B9%E6%8E%A5%E6%96%87%E6%A1%A3.zh-CN.en.pdf).
 ``` sh
 cd ..
 source .env
