@@ -51,9 +51,7 @@ app.post('/payment/payout', (req, res) => {
             // Check if callback was successfull
             axios.post('http://localhost:5000/payment/payout/callback', data)
                 .then((response) => {
-                    if (response == 'success') {
-                        console.log('Payout callback sent successfully');
-                    }
+                    console.log('Payout callback sent successfully');
                 }).catch((err) => {
                     console.error('Error sending callback:', err.message);
             });
