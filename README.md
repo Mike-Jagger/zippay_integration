@@ -59,6 +59,8 @@ source .env
     cd ../frontend
     npm start
     ```
+2. __You should see something similar to this demo opening on your default web browser:__
+   ![](https://github.com/Mike-Jagger/zippay_integration/blob/master/docs/demo%20field%20entries%20(no%20style).gif)
 ## Testing with Postman
 To test the payout functionality with Postman:
 
