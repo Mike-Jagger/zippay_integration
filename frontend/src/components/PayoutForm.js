@@ -31,7 +31,7 @@ const PayoutForm = () => {
 
     const handleSubmit = async (e) => {
         e.preventDefault();
-
+        formData["timestamp"] = Date.now();
         try {
             const response = await axios.post('http://localhost:5000/payment/payout', formData);
             if (response.data.code === 200) {
@@ -59,7 +59,6 @@ const PayoutForm = () => {
             <input type="text" name="tunnelId" placeholder="Tunnel ID" value={formData.tunnelId} onChange={handleChange} required />
             <input type="text" name="currency" placeholder="Currency" value={formData.currency} onChange={handleChange} required />
             <input type="text" name="nonce" placeholder="Nonce" value={formData.nonce} onChange={handleChange} required />
-            <input type="text" name="timestamp" placeholder="Timestamp" value={formData.timestamp} onChange={handleChange} required />
             <button type="submit">Submit</button>
         </form>
     );
