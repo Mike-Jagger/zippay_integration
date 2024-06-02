@@ -1,11 +1,13 @@
 const express = require('express');
 const bodyParser = require('body-parser');
+const cors = require('cors');
 const app = express();
 const PORT = 8080;
 const axios = require('axios');
 const { encryptData, decryptData, constructSignData, cleanUpDecryptedData } = require('./utils');
 
 app.use(bodyParser.json());
+app.use(cors()); // For tests only
 
 app.post('/payment/payout', (req, res) => {
     const payLoad = req.body;
